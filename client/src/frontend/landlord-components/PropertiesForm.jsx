@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input'
 import { fetchRegisterHostel } from '@/features/landlord/assets/register/registerHostelThunk';
-import { fetchLandlordProfile } from '@/features/landlord/profile/landlordProfileThunk';
 import { Label } from '@radix-ui/react-label'
 import { parseEther, parseUnits } from 'ethers';
 import  { useEffect, useState } from 'react'
@@ -11,27 +10,30 @@ import { Link } from 'react-router-dom';
 
 export default function PropertiesForm() {
   const [location, setLocation] = useState("");
-  const [rooms, setRooms] = useState("");
+  const [roomNo, setRoomNo] = useState("");
   const [amount, setAmount] = useState("");
+  const [name, setName] = useState("")
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchLandlordProfile());
-  }, [])
+  // useEffect(() => {
+  //   dispatch(fetchLandlordProfile());
+  // }, [])
   // register property
   const handleRegisterProperty = () => {
-    if (!amount || isNaN(amount)) {
-      console.log("Invalid Amount");
+    if (!amount || isNaN(amount) || !roomNo || isNaN(roomNo) || !location || !name) {
+      console.log("Invalid Input");
       return;
     }
     try {
       const parsedAmount = parseEther(amount);
-      dispatch(fetchRegisterHostel({ location, rooms, amount: parsedAmount }));
+      const parsedRoomNo = parseUnits(roomNo.toString(), 0)
+      dispatch(fetchRegisterHostel({ location, roomNo: parsedRoomNo, amount: parsedAmount, name }));
       console.log(typeof(parsedAmount));
       setAmount("");
       setLocation("");
       setName("");
+      setRoomNo("")
     } catch (error) {
       console.log(error.message);
     }
@@ -46,11 +48,15 @@ export default function PropertiesForm() {
 
           <Label htmlFor="location">Location</Label>
           <Input value={location} onChange={(e) => setLocation(e.target.value)}
-            id="location" placeholder="Ex: Kira Rd" />
+            id="location" placeholder="Enter Location" />
 
-         <Label htmlFor="propertyName">Property Name</Label>
-          <Input value={rooms} onChange={(e) => setRooms(e.target.value)}
-            type="number" id="propertyName" placeholder="Ex: Kireka Villas" />
+          <Label htmlFor="location">Hostel Name</Label>
+          <Input value={name} onChange={(e) => setName(e.target.value)}
+            id="location" placeholder="Enter Hostel Name..." />
+
+         <Label htmlFor="propertyName">Room No.</Label>
+          <Input value={roomNo} onChange={(e) => setRoomNo(e.target.value)}
+            type="number" id="propertyName" placeholder="Enter Room Number" />
 
           <Label htmlFor="rent">Rent Amount (UGX)</Label>
            <Input value={amount} onChange={(e) => setAmount(e.target.value)}

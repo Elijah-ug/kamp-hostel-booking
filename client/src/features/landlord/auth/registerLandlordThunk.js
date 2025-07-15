@@ -8,7 +8,7 @@ export const fetchRegisterLandlord = createAsyncThunk(
         try {
             const contract = await getContract();
             console.log(contract.target)
-            const register = await contract.registerLandLord();
+            const register = await contract.registerHostelOwner();
             await register.wait();
             console.log(register);
             toast.success("Landlord Registered Successfully!")

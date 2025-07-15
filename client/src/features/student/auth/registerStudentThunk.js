@@ -7,7 +7,7 @@ export const fetchRegisterStudent = createAsyncThunk(
     async (_, {rejectWithValue}) => {
         try {
             const contract = await getContract();
-            const register = await contract.registerTenant();
+            const register = await contract.registerStudent();
             await register.wait();
             toast.success("Tenant Registered Successfully!")
             return true;

@@ -3,30 +3,48 @@ import {fetchReturnAllProperties} from "../../features/public/view/propertyThunk
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import { fetchHostelRentRequest } from "@/features/student/request/rentRequestThunk";
+import { fetchAutoHostelPayment } from "@/features/student/payment/hostelPaymentThunk";
 
 export const TrendingProperties = () => {
   const { properties } = useSelector((state) => state.allProperties);
   const { studentProf } = useSelector((state) => state.student);
+  const {userReceipt} = useSelector((state) => state.receipt)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(fetchReturnAllProperties());
-    console.log(properties);
   }, [])
+  console.log("properties: ", properties);
 
-  const handleSendRentRequest = (propertyId) => {
-    const parsedProp = propertyId.toString();
-    console.log(typeof (propertyId))
+  const handleSendRentRequest = (hostelId) => {
+    const parsedProp = hostelId.toString();
+    console.log( (hostelId))
     console.log(typeof(parsedProp))
 
     if (!studentProf.isRegistered) {
-      toast.error("You're not a registered tenant");
-    } else if (properties.tenantRequest) {
-      toast.error("Property has been booked");
+      console.log("You're not registered")
+    } else if (properties.isRequested) {
+      console.log("Hostel already booksd")
     } else {
-      dispatch(fetchHostelRentRequest({propertyId}))
+      dispatch(fetchHostelRentRequest({ hostelId: parsedProp }));
       console.log("Request sent to the contract");
     }
   }
+
+  const handleHostelPayment = (hostelId) => {
+    const parsedPropId = hostelId.toString();
+    dispatch(fetchAutoHostelPayment({ hostelId: parsedPropId }));
+  }
+
+  const isBidder = properties?.filter((property) => property.requestedBy.toLowerCase());
+      console.log("userReceipt: ", userReceipt)
+  let requested;
+  let paid;
+      for (let i = 0; i < isBidder.length; i++){
+        requested = isBidder[i].isRequested;
+        // paid = isBidder[i].isPaid;
+      }
+      console.log("userReceipt?.isPaid: ", userReceipt?.isPaid)
+
 
   return (
     <div>
@@ -35,19 +53,20 @@ export const TrendingProperties = () => {
           {
             properties?.map((property, index) => (
           <div key={index} className="bg-gray-500 rounded-2xl shadow-md p-4 hover:shadow-lg transition-all">
-            <h2 className="text-lg font-semibold mb-2">Property #{property?.propertyId}</h2>
+            <h2 className="text-lg font-semibold mb-2">Property #{property?.hostelId}</h2>
               <p className="flex gap-2">
                 <strong>Landlord:</strong>
-                <span>{property?.landlord?.slice(0, 6)}...{property?.landlord?.slice(-4)}</span>
+                <span>{property?.owner?.slice(0, 6)}...{property?.owner?.slice(-4)}</span>
               </p>
 
-              <p className="flex gap-2"><strong>Location:</strong> <span>{property?.name}</span></p>
               <p className="flex gap-2"><strong>Location:</strong> <span>{property?.location}</span></p>
+                <p className="flex gap-2"><strong>Hostel:</strong> <span>{property?.hostelName}</span></p>
+                <p className="flex gap-2"><strong>Room No:</strong> <span>{property?.roomNo}</span></p>
             <p className="flex gap-2"><strong>Rent:</strong> <span>{property?.rentAmount} ETH</span> </p>
             <p className="flex gap-2">
               <strong>Status:</strong>{" "}
-              <span className={property?.tenantRequest ? "text-red-400" : "text-green-400"}>
-                <span>{property?.tenantRequest ? "Booked" : "Available"}</span>
+              <span className={property?.isRequested ? "text-red-400" : "text-green-400"}>
+                <span>{ userReceipt?.isPaid ? "Paid" : property?.isRequested ? "Booked" :  "Available"}</span>
               </span>
               </p>
               { property.tenantRequest &&(
@@ -56,10 +75,20 @@ export const TrendingProperties = () => {
                 <span>{property?.requestedBy.slice(0, 7)}...{property?.requestedBy.slice(-5)}</span>
                 </p>)
               }
-              <Button onClick={() => handleSendRentRequest(property.propertyId)}
-                type="submit" className="w-1/2 mt-3">
-                Send Rent Request
-              </Button>
+                <div className="flex">
+                  {requested ?
+                    ( <Button disabled={userReceipt.isPaid} onClick={() => handleHostelPayment(property.hostelId)}
+                    type="submit" className=" mt-3">
+                    {userReceipt?.isPaid ?("You've already Paid"): ("Clear Payment")}
+                  </Button>):
+                    (
+                    <Button onClick={() => handleSendRentRequest(property.hostelId)}
+                    type="submit" className=" mt-3">
+                    Send Rent Request
+                    </Button>)
+                   }
+
+              </div>
               </div>
             ))
             }

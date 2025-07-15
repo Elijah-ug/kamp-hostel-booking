@@ -6,7 +6,7 @@ const initialState = {
         balance: "0",
         user: null,
         isRegistered: false,
-        hasProperties: false,
+        hasHostel: false,
     },
     loading: false,
     error: null

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Withdraw from '../public/Withdraw'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,6 +11,7 @@ import { fetchReturnAllProperties } from '@/features/public/view/propertyThunk'
 
 
 export default function LandlordDashboard() {
+  const [propertyIds, setPropertyIds] = useState("")
   const { profile } = useSelector((state) => state.landlord);
   const { address } = useSelector((state) => state.wallet);
   const { properties } = useSelector((state) => state.allProperties);
@@ -22,8 +23,16 @@ export default function LandlordDashboard() {
     dispatch(fetchReturnAllProperties())
     console.log(profile)
   }, [address])
-  const isRequested = properties.some((property) => property.tenantRequest && !property.isOccupied );
+  const isRequested = properties.some((property) => property.isRequested && !property.isOccupied );
   console.log(isRequested)
+  // no of properties
+  useEffect(() => {
+    if (properties && address) {
+      const propOwner = properties?.filter(
+        (prop) => prop?.owner?.toLowerCase() === address.toLowerCase());
+        setPropertyIds(propOwner.length)
+    }
+  }, [properties, address])
   return (
     <div className="mx-10 my-4 relative">
       <h3 className="text-lg font-bold  text-center mb-6">Registered Hostel Owner's Dashboard</h3>
@@ -51,20 +60,15 @@ export default function LandlordDashboard() {
             <span className="text-violet-400 pr-2">Balance:</span>
             <span className="text-lg font-bold">{profile?.balance} ETH</span>
           </div>
-           {/* rented property */}
-           {/* <div >
-            <span className="text-violet-400 pr-2">Property:</span>
-            <span className="text-lg font-bold">House</span>
-          </div> */}
-           {/* property ownership */}
+          
            <div >
             <span className="text-violet-400 pr-2">Owns Property(ies):</span>
             <span className="text-lg font-bold">{profile?.hasProperties? ("✅") : ("No Property")}</span>
           </div>
           {/* Num of properties */}
           <div >
-            <span className="text-violet-400 pr-2">Number of Properties:</span>
-            <span className="text-lg font-bold">{}</span>
+            <span className="text-violet-400 pr-2">Number of Hostels:</span>
+            <span className="text-lg font-bold">{propertyIds}</span>
           </div>
           {isRequested && (<p className="mt-5 text-green-400">NOTE: You have a new request</p>)}
         </div>

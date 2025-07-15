@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol";
 
 
-contract KampHostel is ReentrancyGuard, AutomationCompatibleInterface{
+contract KampHostel is ReentrancyGuard{
     // student
     struct Student {
         uint256 balance;
@@ -62,19 +62,19 @@ contract KampHostel is ReentrancyGuard, AutomationCompatibleInterface{
     event RentPaid(address indexed owner, address indexed student, uint256 amount);
     // =========== modifiers =====
      modifier onlyHostelOwner(){
-        require(hostelOwnerProfile[msg.sender].isRegistered, "Unregistered Landlord");
-        require(hostelOwnerProfile[msg.sender].user == msg.sender, "Not Landlord");
+        require(hostelOwnerProfile[msg.sender].isRegistered, "Unregistered HostelOwner");
+        require(hostelOwnerProfile[msg.sender].user == msg.sender, "Not HostelOwner");
         _;
      }
      modifier onlyStudent(){
-        require(studentProfile[msg.sender].isRegistered, "Tenant Unregistered");
-        require(studentProfile[msg.sender].student == msg.sender, "Unregistered tenant");
+        require(studentProfile[msg.sender].isRegistered, "Student Unregistered");
+        require(studentProfile[msg.sender].student == msg.sender, "Unregistered Student");
         _;
      }
     // =========== main functions ========
      //  **** registering HostelOwner ****
      function registerHostelOwner() external {
-        require(!hostelOwnerProfile[msg.sender].isRegistered, "Landlord registered");
+        require(!hostelOwnerProfile[msg.sender].isRegistered, "HostelOwner registered");
         hostelOwnerProfile[msg.sender] = HostelOwner( 0, msg.sender, true, false);
         emit HostelOwnerRegistered(msg.sender, true);
      }
@@ -85,7 +85,7 @@ contract KampHostel is ReentrancyGuard, AutomationCompatibleInterface{
          external onlyHostelOwner {
         //creating a unique key for the property
         bytes32 propertyKey = keccak256(abi.encodePacked(msg.sender, _location, _amount));
-        require(!isHostelRegistered[propertyKey], "Property registered");
+        require(!isHostelRegistered[propertyKey], "Hostel registered");
 
         listedHostels.push(Hostel(indexedHostel++, msg.sender, _location, _roomNo, _amount, address(0), true, false, false, _name));
         isHostelRegistered[propertyKey] = true;
@@ -95,8 +95,8 @@ contract KampHostel is ReentrancyGuard, AutomationCompatibleInterface{
 
      //  *** registering a student ****
     function registerStudent() external{
-        require(!studentProfile[msg.sender].isRegistered, "Tenant registered");
-        require(!studentProfile[msg.sender].hasActiveHostel, "Tenant registered");
+        require(!studentProfile[msg.sender].isRegistered, "Student registered");
+        require(!studentProfile[msg.sender].hasActiveHostel, "Student registered");
         studentProfile[msg.sender] = Student( 0, msg.sender, false, true );
 
         emit StudentRegistered(msg.sender, true);
@@ -147,24 +147,27 @@ contract KampHostel is ReentrancyGuard, AutomationCompatibleInterface{
 }
 
 //    function to automate payment
-     function autoHostelPayment() public nonReentrant {
-        for(uint i = 0; i < listedHostels.length; i++){
-            Hostel storage hostel = listedHostels[i];
-            IssuedReceipt storage rent = issuedReceipts[hostel.hostelId];
+    function autoHostelPayment(uint256 _hostelId) public nonReentrant {
+    require(_hostelId < listedHostels.length, "Invalid hostelId");
 
-            if(rent.isSigned && rent.startDate > 0 && rent.endDate > rent.startDate &&
-               !rent.isPaid && studentProfile[rent.student].balance >= hostel.rentAmount){
-                // transfer the money
-                studentProfile[rent.student].balance -= hostel.rentAmount;
-                hostelOwnerProfile[rent.owner].balance += hostel.rentAmount;
-                rent.isPaid = true;
-                emit RentPaid(rent.owner, rent.student, hostel.rentAmount);
-            }
-        }
-     }
+    Hostel storage hostel = listedHostels[_hostelId];
+    IssuedReceipt storage rent = issuedReceipts[_hostelId];
+
+    require(rent.isSigned, "Receipt not signed");
+    require(!rent.isPaid, "Already paid");
+    require(rent.startDate > 0 && rent.endDate > rent.startDate, "Invalid period");
+    require(studentProfile[rent.student].balance >= hostel.rentAmount, "Insufficient balance");
+
+    // Perform payment
+    studentProfile[rent.student].balance -= hostel.rentAmount;
+    hostelOwnerProfile[rent.owner].balance += hostel.rentAmount;
+    rent.isPaid = true;
+
+    emit RentPaid(rent.owner, rent.student, hostel.rentAmount);
+}
 
     //  reset verything after the renting period
-    function timedStateReset() internal {
+    function timedStateReset() external {
     for(uint256 i = 0; i < listedHostels.length; i++){
         Hostel storage hostel = listedHostels[i];
         IssuedReceipt storage rent = issuedReceipts[hostel.hostelId];
@@ -212,44 +215,44 @@ contract KampHostel is ReentrancyGuard, AutomationCompatibleInterface{
     }
 
 //    ======== automation helpers ======
-function checkUpkeep(bytes calldata) external view override returns (
-    bool upkeepNeeded, bytes memory performData ){
-        for(uint i = 0; i < listedHostels.length; i++){
-            Hostel memory hostel = listedHostels[i];
-            IssuedReceipt memory receipt = issuedReceipts[hostel.hostelId];
-            // all cleanup
-            if(receipt.isSigned && receipt.isPaid && block.timestamp > receipt.startDate){
-                return (true, abi.encode(hostel.hostelId, uint8(1)));
-            }
-            // clear payments
-            if(receipt.isSigned && !receipt.isPaid && receipt.startDate > 0 &&
-             receipt.endDate > receipt.startDate && block.timestamp >= receipt.startDate &&
-             studentProfile[receipt.student].balance >= hostel.rentAmount ){
-                return (true, abi.encode(hostel.hostelId, uint8(2)));
-             }
-        }
-        return (false, bytes(""));
-}
-function performUpkeep(bytes calldata performData) external override{
-    (, uint8 actionType) = abi.decode(performData, (uint256,uint8));
+// function checkUpkeep(bytes calldata) external view override returns (
+//     bool upkeepNeeded, bytes memory performData ){
+//         for(uint i = 0; i < listedHostels.length; i++){
+//             Hostel memory hostel = listedHostels[i];
+//             IssuedReceipt memory receipt = issuedReceipts[hostel.hostelId];
+//             // all cleanup
+//             if(receipt.isSigned && receipt.isPaid && block.timestamp > receipt.startDate){
+//                 return (true, abi.encode(hostel.hostelId, uint8(1)));
+//             }
+//             // clear payments
+//             if(receipt.isSigned && !receipt.isPaid && receipt.startDate > 0 &&
+//              receipt.endDate > receipt.startDate && block.timestamp >= receipt.startDate &&
+//              studentProfile[receipt.student].balance >= hostel.rentAmount ){
+//                 return (true, abi.encode(hostel.hostelId, uint8(2)));
+//              }
+//         }
+//         return (false, bytes(""));
+// }
+// function performUpkeep(bytes calldata performData) external override{
+//     (, uint8 actionType) = abi.decode(performData, (uint256,uint8));
 
-    if(actionType == 1){
-        timedStateReset();
-    }else if(actionType == 2){
-        autoHostelPayment();
-    }
-}
+//     if(actionType == 1){
+//         timedStateReset();
+//     }else if(actionType == 2){
+//         autoHostelPayment();
+//     }
+// }
 
   // ========== VIEW FUNCTIONS ======
      function returnAllHostels() external view returns(Hostel[] memory){
         return listedHostels;
      }
      function returnStudentProfile() external view returns(Student memory){
-        require(studentProfile[msg.sender].isRegistered, "Unregistered tenant");
+        require(studentProfile[msg.sender].isRegistered, "Unregistered Student");
         return studentProfile[msg.sender];
      }
      function returnHostelOwnerProfile() external view returns (HostelOwner memory) {
-        require(hostelOwnerProfile[msg.sender].isRegistered, "Unregistered landlord");
+        require(hostelOwnerProfile[msg.sender].isRegistered, "Unregistered HostelOwner");
           return hostelOwnerProfile[msg.sender];
        }
       function returnHostelReceipt() external view returns (IssuedReceipt memory) {

@@ -5,7 +5,7 @@ const initialState = {
     studentProf: {
         balance: "0",
         user: null,
-        hasActiveRent: false,
+        hasActiveHostel: false,
         isRegistered: false,
     },
     loading: false,
@@ -22,7 +22,7 @@ const studentProfileSlice = createSlice({
             })
             .addCase(fetchStudentProfile.fulfilled, (state, action) => {
                 state.loading = false;
-                state.tenantProf = action.payload;
+                state.studentProf = action.payload;
             })
             .addCase(fetchStudentProfile.rejected, (state, action) => {
                 state.loading = false;

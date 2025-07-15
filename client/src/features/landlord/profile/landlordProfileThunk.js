@@ -8,13 +8,13 @@ export const fetchLandlordProfile = createAsyncThunk(
         try {
             const contract = await getContract();
             console.log(contract)
-            const tx = await contract.returnLandlordProfile();
+            const tx = await contract.returnHostelOwnerProfile();
 
             const profile = {
                 balance: formatEther(tx[0].toString()),
                 user: tx[1],
                 isRegistered: tx[2],
-                hasProperties: tx[3]
+                hasHostel: tx[3]
             }
             // console.log(profile);
             return profile;

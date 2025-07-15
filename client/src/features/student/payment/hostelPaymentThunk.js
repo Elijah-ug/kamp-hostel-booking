@@ -5,17 +5,17 @@ import { getContract } from "@/assets/contract";
 import { fetchStudentProfile } from "../profile/studentProfileThunk";
 import { toast } from "react-toast";
 
-export const fetchHostelRentRequest = createAsyncThunk(
-    "request/fetchPropertyRentRequest",
+export const fetchAutoHostelPayment = createAsyncThunk(
+    "payment/fetchAutoHostelPayment",
     async ({hostelId}, { rejectWithValue, dispatch }) => {
         try {
             const contract = await getContract();
-            const request = await contract.hostelRentRequest(hostelId);
+            const request = await contract.autoHostelPayment(hostelId);
             await request.wait();
             dispatch(fetchStudentProfile());
             dispatch(fetchReturnAllProperties());
             dispatch(fetchReceiptThunk())
-            toast.success("Request sent")
+            toast.success("Payment succeeded!")
             return true;
         } catch (error) {
             console.log(error.message);

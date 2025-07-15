@@ -17,7 +17,7 @@ export default function StudentDashboard() {
   }, [])
   const isBidder = properties.some(
     (property) => property?.requestedBy?.toLowerCase() == address?.toLowerCase());
-  console.log("isBidder: ", isBidder);
+  // console.log("isBidder: ", isBidder);
   console.log(studentProf)
 
   return (
@@ -36,12 +36,12 @@ export default function StudentDashboard() {
            {/* balance */}
            <div >
             <span className="text-amber-400 pr-2">Balance:</span>
-            <span className="text-lg font-bold">{studentProf.balance} ETH</span>
+            <span className="text-lg font-bold">{studentProf?.balance} ETH</span>
           </div>
            {/* address */}
            <div >
             <span className="text-amber-400 pr-2">Currently Renting:</span>
-            <span className="text-lg font-bold">{studentProf?.hasActiveRent? "✅" : "No"}</span>
+            <span className="text-lg font-bold">{studentProf?.hasActiveHostel? "✅" : "No"}</span>
             </div>
           </div>
 

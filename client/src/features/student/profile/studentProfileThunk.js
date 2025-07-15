@@ -7,16 +7,16 @@ export const fetchStudentProfile = createAsyncThunk(
     async (_, {rejectWithValue}) => {
         try {
             const contract = await getContract();
-            console.log(contract)
-            const tx = await contract.returnTenantProfiles();
+            // console.log(contract)
+            const tx = await contract.returnStudentProfile();
 
             const studentProf = {
                 balance: formatEther(tx[0].toString()),
                 user: tx[1],
-                hasActiveRent: tx[2],
+                hasActiveHostel: tx[2],
                 isRegistered: tx[3]
             }
-            console.log(studentProf);
+            console.log("studentProf: ", studentProf);
             return studentProf;
         } catch (error) {
             console.log(error.message);

@@ -9,19 +9,20 @@ export const fetchReturnAllProperties = createAsyncThunk(
     async (_, { rejectWithValue, dispatch }) => {
         try {
             const contract = await getContract();
-            const allProperties = await contract.returnAllProperties();
+            const allProperties = await contract.returnAllHostels();
             const properties = allProperties.map((property) => ({
-                propertyId: property[0].toString(),
-                landlord: property[1],
+                hostelId: property[0].toString(),
+                owner: property[1],
                 location: property[2],
-                name: property[3],
+                roomNo: property[3].toString(),
                 rentAmount: formatEther(property[4].toString()),
                 requestedBy: property[5],
-                isOccupied: property[6],
-                tenantRequest: property[7],
-                isRegistered: property[8]
+                isRegistered: property[6],
+                isRequested: property[7],
+                isOccupied: property[8],
+                hostelName: property[9]
             }));
-            console.log(properties);
+            // console.log(properties);
             dispatch(fetchLandlordProfile());
             dispatch(fetchStudentProfile());
             return properties;

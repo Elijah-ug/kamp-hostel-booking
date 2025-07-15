@@ -6,9 +6,9 @@ export const fetchReceiptThunk = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const contract = await getContract();
-            const receipts = await contract.returnRental();
+            const receipts = await contract.returnHostelReceipt();
             const userReceipt = {
-                propertyId: receipts[0].toString(),
+                hostelId: receipts[0].toString(),
                 startDate: new Date(Number(receipts[1]) * 1000).toLocaleDateString("en-us", {
                     year: "numeric",
                     month: "short",
@@ -19,10 +19,10 @@ export const fetchReceiptThunk = createAsyncThunk(
                     month: "short",
                     day: "numeric"
                 }),
-                landlord: receipts[3],
-                tenant: receipts[4],
-                isSigned: receipts[5],
-                isReleased: receipts[6],
+                roomNo: receipts[3].toString(),
+                owner: receipts[4],
+                student: receipts[5],
+                isSigned: receipts[6],
                 isPaid: receipts[7],
                 propertyName: receipts[8],
             }

@@ -16,9 +16,17 @@ export default function Receipts() {
     }, [])
     console.log("receiptuserReceipt: ", properties);
   console.log("receiptuserReceipt: ", userReceipt);
-  // const propId =
-  const isBidder = properties?.filter((property) => property.requestedBy.toLowerCase() === address.toLowerCase())
- const price = isBidder.map((pr) => pr.rentAmount)
+
+      const isBidder = properties?.filter(
+        (property) => property.requestedBy.toLowerCase() ||
+          property.owner.toLowerCase() === address.toLowerCase())
+          console.log("is bidder: ", isBidder)
+          let price;
+          for (let i = 0; i < isBidder.length; i++){
+            price = isBidder[i].rentAmount
+          }
+          console.log(price)
+
 
   return (
       <div>
@@ -27,27 +35,22 @@ export default function Receipts() {
                   <h4 className="text-center text-amber-500 font-bold">RECEIPT</h4>
                 {/* Landlord */}
                               <div >
-                    <span className="text-amber-400 pr-2 font-bold">Landlord:</span>
+                    <span className="text-amber-400 pr-2 font-bold">Owner:</span>
                   <span className="text-sm">
-                      {userReceipt?.landlord?.slice(0, 7)}...{userReceipt?.landlord?.slice(-5)}
+                      {userReceipt?.owner?.slice(0, 7)}...{userReceipt?.owner?.slice(-5)}
                   </span>
               </div>
               {/* Landlord */}
               <div >
-                    <span className="text-amber-400 pr-2 font-bold">Tenant:</span>
+                    <span className="text-amber-400 pr-2 font-bold">Student:</span>
                     <span className="text-sm">
-                    {userReceipt?.tenant?.slice(0, 7)}...{userReceipt?.tenant?.slice(-5)}
+                    {userReceipt?.student?.slice(0, 7)}...{userReceipt?.student?.slice(-5)}
                     </span>
-              </div>
-
-                  <div >
-                    <span className="text-amber-400 pr-2 font-bold">Property:</span>
-                    <span className=" text-sm">{userReceipt.isReleased? "released" : "withheld"}</span>
               </div>
               <div>
                     <span className="text-amber-400 pr-2 font-bold">PropertyId:</span>
                   <span className=" text-sm">
-                      {userReceipt?.propertyId ? (Number(userReceipt.propertyId)) : "N/A"}</span>
+                      {userReceipt?.hostelId ? ("#" + Number(userReceipt.hostelId)) : "N/A"}</span>
                   </div>
                   {/* address */}
                   <div >

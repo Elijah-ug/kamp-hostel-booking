@@ -4,11 +4,11 @@ import { fetchStudentProfile } from "../profile/studentProfileThunk";
 import { toast } from "react-toast";
 
 export const fetchStudentDeposit = createAsyncThunk(
-    "deposit/fetchTenantDeposit",
+    "deposit/fetchStudentDeposit",
     async ({amount}, { rejectWithValue, dispatch }) => {
         try {
             const contract = await getContract();
-            const deposit = await contract.tenantDeposit({ value: amount });
+            const deposit = await contract.studentDeposit({ value: amount });
             await deposit.wait();
             dispatch(fetchStudentProfile());
             toast.success("Deposited successfully");
