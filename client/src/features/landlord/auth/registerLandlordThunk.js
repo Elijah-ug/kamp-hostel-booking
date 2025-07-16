@@ -1,6 +1,6 @@
 import { getContract } from "@/assets/contract";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { toast } from "react-toast";
+import { toast } from "react-toastify";
 
 export const fetchRegisterLandlord = createAsyncThunk(
     "regLandlord/fetchRegisterLandlord",

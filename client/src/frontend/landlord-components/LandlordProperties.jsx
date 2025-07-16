@@ -60,11 +60,13 @@ export const LandlordProperties = () => {
             </div>
 
             {/* Receipt */}
-            {isOwner && property.propertyId === userReceipt.propertyId && (
+            {isOwner && property.hostelId === userReceipt.hostelId? (
               <div className="w-1/2 bg-gray-600 p-4 rounded-lg">
                 <Receipts />
-              </div>
-            )}
+              </div>) : (<p
+                className="w-1/2 bg-gray-600 text-lg flex items-center justify-center ">
+                No receipt yet</p>)
+            }
           </div>
         ))
       ) : (

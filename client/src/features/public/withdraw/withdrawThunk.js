@@ -2,7 +2,7 @@ import { getContract } from "@/assets/contract";
 import { fetchLandlordProfile } from "@/features/landlord/profile/landlordProfileThunk";
 import { fetchStudentProfile } from "@/features/student/profile/studentProfileThunk";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { toast } from "react-toast";
+import { toast } from "react-toastify";
 
 export const fetchUserWithdraw = createAsyncThunk(
     "withdraw/fetchUserWithdraw",

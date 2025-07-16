@@ -3,7 +3,7 @@ import { fetchReturnAllProperties } from "@/features/public/view/propertyThunk";
 import { fetchReceiptThunk } from "@/features/public/receipts/receiptThunk";
 import { getContract } from "@/assets/contract";
 import { fetchStudentProfile } from "../profile/studentProfileThunk";
-import { toast } from "react-toast";
+import { toast } from "react-toastify";
 
 export const fetchHostelRentRequest = createAsyncThunk(
     "request/fetchPropertyRentRequest",

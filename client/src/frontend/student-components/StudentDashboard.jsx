@@ -10,6 +10,7 @@ export default function StudentDashboard() {
   const { studentProf } = useSelector((state) => state.student);
   const { address } = useSelector((state) => state.wallet);
   const { properties } = useSelector((state) => state.allProperties);
+  const { userReceipt } = useSelector((state) => state.receipt);
 
   useEffect(() => {
     dispatch(fetchStudentProfile());
@@ -19,6 +20,9 @@ export default function StudentDashboard() {
     (property) => property?.requestedBy?.toLowerCase() == address?.toLowerCase());
   // console.log("isBidder: ", isBidder);
   console.log(studentProf)
+  //  property.hostelId === userReceipt.hostelId?
+  const matchedReceipt = properties.find((property) => property.hostelId === userReceipt.hostelId)
+  console.log("matchedReceipt: ", matchedReceipt)
 
   return (
     <div className="mt-2">
@@ -36,7 +40,7 @@ export default function StudentDashboard() {
            {/* balance */}
            <div >
             <span className="text-amber-400 pr-2">Balance:</span>
-            <span className="text-lg font-bold">{studentProf?.balance} ETH</span>
+            <span className="text-lg font-bold">{studentProf?.balance} CELO</span>
           </div>
            {/* address */}
            <div >

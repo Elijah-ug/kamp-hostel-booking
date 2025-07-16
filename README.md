@@ -17,7 +17,6 @@ Students often send money before confirming room availability, while hostel owne
 **KampHostel** is a decentralized hostel booking platform that allows:
 - 🧑‍🎓 **Students** to browse and reserve verified hostel rooms using smart contracts
 - 🧑‍💼 **Hostel Owners** to list rooms and receive escrowed payments only when a booking is confirmed
-- ⏱️ **Automation** to ensure refunds if bookings aren’t confirmed within a set time window (e.g., 24 hours)
 
 All logic is handled onchain — no intermediaries.
 
@@ -25,18 +24,18 @@ All logic is handled onchain — no intermediaries.
 
 ## 💡 How It Works
 
-1. 📝 **Hostel owners** register hostel rooms with price, location, and room name
+1. 📝 **Hostel owners** register hostel rooms with price, location, and room number
 2. 💳 **Students reserve** available rooms by paying into an escrow smart contract
-3. ✅ **Hostel owners confirm** the booking within 24 hours
-4. ⏱️ If no confirmation, funds are automatically refunded
-5. 💰 If confirmed, funds are locked until the student checks in or the period expires
+<!-- 3. ✅ **Hostel owners confirm** the booking within 24 hours -->
+<!-- 4. ⏱️ If no confirmation, funds are automatically refunded -->
+<!-- 5. 💰 If confirmed, funds are locked until the student checks in or the period expires -->
 6. 🏧 Hostel owners can **withdraw earnings** securely after confirmation
 
 ---
 
 ## 🔐 Built With
 - Solidity (`^0.8.x`)
-- Chainlink Automation (optional for timeout logic)
+<!-- - Chainlink Automation (optional for timeout logic) -->
 - React + Tailwind (frontend)
 - Hardhat for deployment/testing
 

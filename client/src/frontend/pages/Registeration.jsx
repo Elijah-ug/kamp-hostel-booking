@@ -26,16 +26,16 @@ export default function Registeration() {
                   {/* landlord */}
                   <Card className="w-full max-w-sm">
                   <CardHeader>
-                  <CardTitle>Landlord Guide</CardTitle>
+                  <CardTitle>Hostel Owner's Guide</CardTitle>
                   <CardDescription>
-                  This' a simple guide for Landlord Registration
+                  This' a simple guide for Hostel Landlord Registration
                 </CardDescription>
               </CardHeader>
                       <CardContent>
                           <p>By clicking the register button below, you will be recognised
-                              as one of the landlords on the platform. There after you'll
-                              move on to add your rental proerties, rent price, property
-                              name and location for tenants to rent. </p>
+                              as one of the Hostel Owners on the platform. There after you'll
+                             move on to add your rental Hostels, Hostel Name, Location and
+                             rent price for Students to rent. </p>
                      </CardContent>
               <CardFooter className="flex-col gap-2">
               <Button onClick={handleRegisterLandlord}
@@ -45,20 +45,20 @@ export default function Registeration() {
                   {/* tenant */}
                   <Card className="w-full max-w-sm">
                   <CardHeader>
-                  <CardTitle>Tenant Guide</CardTitle>
+                  <CardTitle>Student Guide</CardTitle>
                   <CardDescription>
-                  This' a simple guide for Tenant Registration
+                  This' a simple guide for Student Registration
                 </CardDescription>
               </CardHeader>
                       <CardContent>
                           <p>By clicking the register button below, you will be recognised
-                              as one of the tenants on the platform. This will give you an opportunity
-                              to navigate through the available rental properties and prices, which will further
+                              as one of the Students on the platform. This will give you an opportunity
+                              to navigate through the available Hostels and prices, which will further
                               guide you to make the best choice.</p>
                       </CardContent>
               <CardFooter className="flex-col gap-2">
               <Button onClick={handleRegisterTenant}
-                type="submit" className="w-full">Register As Tenant</Button>
+                type="submit" className="w-full">Register As A Student</Button>
               </CardFooter>
     </Card>
               </div>

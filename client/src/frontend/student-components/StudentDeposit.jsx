@@ -21,7 +21,7 @@ export default function StudentDeposit() {
     dispatch(fetchStudentDeposit({ amount: parsedAmount }));
     console.log(parsedAmount)
   }
-  
+
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
@@ -36,7 +36,7 @@ export default function StudentDeposit() {
             <div className="grid gap-2">
               <Label  htmlFor="number">Amount</Label>
               <Input value={amount} onChange={(e) => setAmount(e.target.value)}
-                id="number" type="number" placeholder="0.05 ETH" required
+                id="number" type="number" placeholder="0.05 CELO" required
               />
             </div>
           </div>

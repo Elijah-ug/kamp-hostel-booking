@@ -17,15 +17,8 @@ export default function Receipts() {
     console.log("receiptuserReceipt: ", properties);
   console.log("receiptuserReceipt: ", userReceipt);
 
-      const isBidder = properties?.filter(
-        (property) => property.requestedBy.toLowerCase() ||
-          property.owner.toLowerCase() === address.toLowerCase())
-          console.log("is bidder: ", isBidder)
-          let price;
-          for (let i = 0; i < isBidder.length; i++){
-            price = isBidder[i].rentAmount
-          }
-          console.log(price)
+  const matchedProperty = properties.find((property) => property.hostelId === userReceipt.hostelId)
+  const price = matchedProperty.rentAmount || "N/A"
 
 
   return (
@@ -55,12 +48,12 @@ export default function Receipts() {
                   {/* address */}
                   <div >
                     <span className="text-amber-400 pr-2 font-bold">Rent Price:</span>
-                    <span className="text-sm">{price}ETH</span>
+                    <span className="text-sm">{price}CELO</span>
                     </div>
                     {/* rntal payment status */}
                   <div >
                     <span className="text-amber-400 pr-2 font-bold">Rental Paid:</span>
-                    <span className="text-sm"> {userReceipt.isPaid? "✅" : "Unpaid"}</span>
+                    <span className="text-sm"> {userReceipt.isPaid? "✅" : "Not Paid ❌"}</span>
                     </div>
 
                     {/* start date */}
@@ -76,7 +69,7 @@ export default function Receipts() {
               {/* signed */}
               <div >
                     <span className="text-amber-400 pr-2 font-bold">Signed:</span>
-                    <span className="text-sm">{userReceipt.isSigned? "✅": "Unsigned"}</span>
+                    <span className="text-sm">{userReceipt.isSigned? "✅": "Unsigned ❌"}</span>
               </div>
               </div>)}
     </div>

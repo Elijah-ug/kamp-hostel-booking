@@ -58,9 +58,9 @@ export default function LandlordDashboard() {
            {/* balance */}
            <div >
             <span className="text-violet-400 pr-2">Balance:</span>
-            <span className="text-lg font-bold">{profile?.balance} ETH</span>
+            <span className="text-lg font-bold">{profile?.balance} CELO</span>
           </div>
-          
+
            <div >
             <span className="text-violet-400 pr-2">Owns Property(ies):</span>
             <span className="text-lg font-bold">{profile?.hasProperties? ("✅") : ("No Property")}</span>

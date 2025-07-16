@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getContract } from "@/assets/contract";
 import { fetchStudentProfile } from "../profile/studentProfileThunk";
-import { toast } from "react-toast";
+import { toast } from "react-toastify";
 
 export const fetchStudentDeposit = createAsyncThunk(
     "deposit/fetchStudentDeposit",

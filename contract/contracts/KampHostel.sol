@@ -105,6 +105,7 @@ contract KampHostel is ReentrancyGuard{
      // **** student function to request rental *****
     function hostelRentRequest(uint256 _hostelId) external onlyStudent{
         require(_hostelId < listedHostels.length, "Invalid hostel Id");
+        require(!studentProfile[msg.sender].hasActiveHostel, "Student already has an active hostel");
         Hostel storage hostel = listedHostels[_hostelId];
 
         require(!hostel.isOccupied, "Hostel occupied");

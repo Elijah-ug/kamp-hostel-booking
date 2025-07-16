@@ -14,8 +14,8 @@ import { autoConnectWallet } from "./auth/autoConnectWalletThunk";
 import Footer from "./frontend/public/Footer";
 import StudentDashboard from "./frontend/student-components/StudentDashboard";
 import StudentDeposit from "./frontend/student-components/StudentDeposit";
-import { ToastContainer } from "react-toast";
 import SignReceipt from "./frontend/landlord-components/SignReceipt";
+import { ToastContainer } from "react-toastify";
 export default function App() {
   const dispatch = useDispatch()
   useEffect(() => {
