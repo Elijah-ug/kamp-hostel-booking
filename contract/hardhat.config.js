@@ -15,6 +15,11 @@ module.exports = {
       url: process.env.CELO_ALFAJORES_RPC_URL,
       accounts: [process.env.PRIVATE_KEY],
       chainId: 44787,
+    },
+    celoMainnet: {
+      url: process.env.CELO_MAINNET_RPC_URL,
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 0xa4ec,
     }
   }
 }
