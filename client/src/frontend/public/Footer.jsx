@@ -19,7 +19,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <span className="text-xs">Built on Base Sepolia</span>
+            <span className="text-xs">Built on Celo Mainnet</span>
           </div>
         </div>
       </footer>
